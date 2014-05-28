@@ -1,14 +1,24 @@
 #include <iostream>
+#include <vector>
+#include <string>
+
+#include "include/parser.h"
+
 using namespace std;
 
-class Parser {
-    public:
-        void say_hello() {
-            cout << "No" << endl;
-        }
-};
+Parser::Parser() {
+    cout << "Hello, world!" << endl;
+    for(int i = 4; i < 10; i++) {
+        numbers.push_back(i);
+    }
+}
 
-int main(int argc, char** argv) {
-    Parser parse;
-    parse.say_hello();
+void Parser::say_goodbye() {
+    cout << "Goodbye cruel world!" << endl;
+}
+
+void Parser::sound_off() {
+    for(int i = 0; i < numbers.size(); i++) {
+        cout << numbers[i] << endl;
+    }
 }
