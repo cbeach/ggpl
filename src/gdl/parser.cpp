@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 
-#include "include/parser.h"
+#include "parser.h"
 
 using namespace std;
 
