@@ -7,12 +7,12 @@
 
 using namespace std;
 
-class Parser {
+class Compiler {
     vector<int> numbers;
     public:
         Parser();
-        void say_goodbye();
-        void sound_off();
+        void import_rule_set()
+        void parse_rule_set()
 };
 
 #endif
