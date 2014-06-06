@@ -50,6 +50,7 @@ Equivalent to noop.  Allows for variable declarations with empty properties.  Fo
     node_a --> node_b northern_edge:
         pass
 ```
+Note: Ommiting the colon is shorthand for an empty object
 
 # Operators
 

@@ -1,0 +1,1 @@
+The game rules, UI, and styling should all be separate tools with hooks into each other.

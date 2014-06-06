@@ -13,23 +13,65 @@ This language is statically typed
 * TODO: Settle on a more specific and precise definition of ludeme as it pertains to this GDL.
 
 
-### Players [_name_, ...]: 
-TODO: The player definition and reference model needs work.
+### Players
+Player objects must be defined in either the players record, or as orphaned variables in a library.
+Note: This is probably an un-necessary rule, there's probably no reason for having player declarations limited to the players record.j
+
+#### Player 
+Syntax:
+```python
+player NAME[:]
+    [properties]
+```
+
 * Defines a list of players for the current game.  Upto eight players can be defined in one game.
-    * Eg Player [alice, bob, carol, dungeon_master]
+
+Example:
+```python
+ludeme some_game:
+    player alice
+    player bob
+    player carol
+    player dungeon_master:
+        label:
+            "Dungeon Master"
+        lives:
+            1000
+```
+
 * Individual players can be referenced referenced by index, or name
     * The following references are equivalent
         * "players[0]", and "players.alice" are equivalent.
 * Lists of players can be referenced with the following macros
     * all|none|neutral|current|friend|enemy
         * all, neutral, current, friend, and enemy all return an array of players
-        * None returns the null type
+        * None returns the null type (Empty List?)
         * Current's scope is based on who's turn it currently is.
             * Eg players.all would return [alice, bob, carol, dungeon_master] in the above example
+            * Eg players.friend would return [alice, bob, carol] if it's alice's, bob's, or carol's turn.  Will return [dungeon\_master] if it's dungeon\_master's turn.
 
-### Piece _owner_ [name]:
+### Piece
+
+
 * Defines a generic piece.
 * Eg Piece Knight ...
+```python
+piece knight All:
+    moves:
+        move
+            dirn: 
+                all
+            pre:
+                ((owner from) and ((steps f f r f) or (steps f f l f)))
+            action: 
+                pop 
+                push 
+            post: 
+                capture replace
+        )
+    )
+
+```
 
 ### Move
 

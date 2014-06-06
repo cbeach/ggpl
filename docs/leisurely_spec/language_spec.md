@@ -32,23 +32,7 @@ key/value pairs of a hash table.
 
 
 # Open Questions
-## Long list of variables that need to be overridden
-Am I going to be able to avoid having a long list of required properties?  Is there a way of avoiding that without making this language completely general purpose?
 
-Should I be so determined to use JavaScript like syntax? Python is going to be an integral part of this project as well.  Using Python style (with significant whitespace) wouldn't add any complexity...
-
-
-## Lists of things
-I'm encountering a problem where I'm defining long lists of properties. 
-Eg the list of moves for a piece.  It is fairly clear that the piece definition is creating a class.  For instance "piece knight ..." would declare the blueprint for a chess like knight.
-What is less clear is howto handle the definition of the moves that are legal for that knight.  
-The semantics are that of an array.  I.e.  many similar anonymous objects stored in sequence.  However the use of the "moves = [ ... ]" adds unnecessary syntax.
-
-### Posible solution 1:  Anonymous declarations
-It might be syntactically beneficial in some situations to allow for anonymous variable declarations.  How ever this may make the code harder to read...
-
-### Possible solution 2: Just use the array/object notation
-Array notation is already an integral part of both Python and JavaScript
 
 # Decided:
 * Are you going to allow direct pointer access or not?
