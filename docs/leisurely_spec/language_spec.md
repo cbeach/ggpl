@@ -10,15 +10,10 @@ improve the GDL ecosystem.
 This specification is concerned with the implementation game rules _only_.  This GDL will have
 no features for defining the "look and feel" of the game.  That will be defined elsewhere
 
-# NOTES:
-I finally figured out what's bothering me about the JavaScript style object syntax.  I'm
-creating objects, and giving them methods and variables, but I'm mixing up the semantics
-of the curly brackets.  I'm declarations as a mix between defining variables, and defining
-key/value pairs of a hash table.
-
-# TODO:
-* What are the semantics of curly brackets in the main ludeme object
-    * Are the strictly like those of a hash table?
+# Open Questions
+* Should I rename ludeme to game?
+* Should I use RPN?
+    * It's easier to parse, but harder to write.
 * What operators should be available for scope resolution?
 * Should the user be able to define functions?
 * What are the data types of your language?
@@ -30,11 +25,7 @@ key/value pairs of a hash table.
         * It would most likely spiral into something truely hideous. 
         * Might require the addition of an operator overloading system.
 
-
-# Open Questions
-
-
-# Decided:
+# Answered:
 * Are you going to allow direct pointer access or not?
     * No
 * Is it a static or dynamic language?
@@ -48,7 +39,7 @@ key/value pairs of a hash table.
 * What is the paradigm or paradigms of you language? Functional? Object-oriented? Prototype (like JavaScript)? Aspect-oriented? Template oriented? Or something entirely new?
     * This is an Automata-based programming language
 * How is your language going to interface with existing libraries and languages (mainly C)? This point is important if you're building a domain-specific language.
-    * It doesn't have to.    
+    * It doesn't have to.
 * Allow "Naked" variable declarations.
     * Named pieces, boards, graphs, play_areas, rules, etc. can be declared outside of the scope of a game.
     * Not allowing this would make the import keyword useless
@@ -116,7 +107,7 @@ ludeme NAME:
             [flags Flags]
             [value NUMBER]
     [support]:
-        // this section contains data for meta-analyses
+        // This section contains data relating analyses
 }
 ```
 
