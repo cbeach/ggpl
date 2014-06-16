@@ -1,0 +1,21 @@
+ - The Lexer/Parser/CodeGenerator library (generator) is written in Flex, Bison, and C respectively, 
+ - The generator will accept well formed LeisurelyScript files.
+    - Another generator can be written to accept GDL later on.
+ - The first version of the generator will output C as well.
+ - The generator can be expanded with other languages later on.
+    - Multiple languages can be used to support different tasks.
+     - Possible additions: GDL, Prolog, OpenCL, Verilog (VHDL?), etc
+ - Code generation will need some kind of templating system.
+
+Generated Code
+ - Game objects can be represented as structures
+  - Eg: Using Jinja2 formatting for reference (probably won't use jinja2)
+    typedef scruct piece_{{piece_name}} {
+        char* label = {{piece.label}};
+        Move moves[ {{moves.size()}} ];
+        ...
+        {% for prop in properties %}
+            {{prop.type}} {{prop.id}};
+        {% endfor %}
+    } piece_{{piece_name}};
+ - The game rules user propnets.

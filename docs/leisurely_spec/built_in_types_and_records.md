@@ -5,7 +5,7 @@ This language is statically typed
 ## Primitive Types
 ### int
 ### float
-### array
+### narray
 
 ## Record Types
 ### game _name_:
@@ -30,6 +30,13 @@ Syntax:
 ```python
 player NAME[:]
     [properties]
+```
+
+### inputs
+
+```python
+input {boolean | int | uint | float | char | string} ID:
+    [PlayerType]  # defaults to all
 ```
 
 * Defines a list of players for the current game.  Upto eight players can be defined in one game.
@@ -175,7 +182,7 @@ play_area:
     coordinates: 
         coordinate_system: Cartesian|Polar|Cylindrical|Spherical
         axes: 
-            x: 
+            x_axis: 
                 type: 
                     discrete|continuous
                 range:
@@ -183,9 +190,9 @@ play_area:
                         NUMBER
                     min:
                         NUMBER
-            y: 
+            y_axis: 
                 // same properties as x
-            z:    
+            z_axis:    
                 // same properties as x
     area_structure: 
         Graph|Plane|Volume:

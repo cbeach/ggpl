@@ -1,2 +1,10 @@
+int
+float
+uint
+char
+string
 game tic_tac_toe:
+    x_axis
+    y_axis
+    z_axis
     
