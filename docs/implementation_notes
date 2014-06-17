@@ -1,3 +1,4 @@
+ General features
  - The Lexer/Parser/CodeGenerator library (generator) is written in Flex, Bison, and C respectively, 
  - The generator will accept well formed LeisurelyScript files.
     - Another generator can be written to accept GDL later on.
@@ -19,3 +20,7 @@ Generated Code
         {% endfor %}
     } piece_{{piece_name}};
  - The game rules user propnets.
+
+
+Proof of concept
+ - Use a json encoded version of LeisurelyScript, Python, and Jinja2 to generate tic-tac-toe
