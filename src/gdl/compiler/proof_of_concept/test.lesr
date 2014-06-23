@@ -1,0 +1,21 @@
+(game tic_tack_toe 
+    (
+        (board 
+            (tile_type square)
+            (shape square)
+            (board_size 3 3) 
+        ) 
+        (players X O) 
+        (end (n_in_a_row 3 i_nbors Stone)) 
+        (pieces 
+            (piece Stone All
+                (moves
+                    (move
+                        (action push(dest)) 
+                        (pre empty(dest))
+                    )
+                )
+            )
+        )
+    )
+)

@@ -1,17 +1,23 @@
 #!/usr/bin/env python
 
-import json
-from collections import defaultdict
+import argparse
 
-import jinja2
+import sexpdata
+from grammar import AST
 
-with open('./test.lsr', 'r') as fp:
-    src = fp.read()
+from termcolor import cprint
 
-symbol_table = defaultdict(dict)
+#arg_parser = argparse.ArgumentParser(description="LeisurelyScript compiler")
+#arg_parser.add_argument('-f', help='A leisurely script to compile.')
 
-src_obj = json.loads(src)
-game = src_obj['game']
+def parse_file(path):
+    with open(path, 'r') as fp:
+        s = sexpdata.loads(fp.read())
 
-template_loader = jinja2.FileSystemLoader(searchpath="./templates")
-template_env = jinja2.Environment(loader=template_loader)
+    #for i in s:
+    #    print i
+
+    ast = AST(s)
+    return ast
+
+s = parse_file('test1.lesr')
