@@ -1,0 +1,11 @@
+Jinja2==2.7.3
+MarkupSafe==0.23
+argparse==1.2.1
+beautifulsoup4==4.3.2
+decorator==3.4.0
+ipdb==0.8
+ipython==2.1.0
+networkx==1.9
+sexpdata==0.0.3
+termcolor==1.1.0
+wsgiref==0.1.2

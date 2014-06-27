@@ -7,8 +7,9 @@ from grammar import AST
 
 from termcolor import cprint
 
-#arg_parser = argparse.ArgumentParser(description="LeisurelyScript compiler")
-#arg_parser.add_argument('-f', help='A leisurely script to compile.')
+arg_parser = argparse.ArgumentParser(description='LeisurelyScript compiler')
+arg_parser.add_argument('path', help='A leisurely script to compile.')
+args = arg_parser.parse_args()
 
 def parse_file(path):
     with open(path, 'r') as fp:
@@ -20,4 +21,4 @@ def parse_file(path):
     ast = AST(s)
     return ast
 
-s = parse_file('test1.lesr')
+s = parse_file(args.path)
