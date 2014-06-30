@@ -1,5 +1,7 @@
 (game tic_tack_toe 
     (players X O) 
+    (input int x)
+    (intput int y)
     (board 
         (tile_type square)
         (shape square)
