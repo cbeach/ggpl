@@ -1,5 +1,7 @@
 *.yy.c
+*.o
 lexer
 example.y
 stekin/
 proof_of_concept/zog_games*
+proof_of_concept/templates/python_test

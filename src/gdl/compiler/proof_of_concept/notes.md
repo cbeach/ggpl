@@ -15,29 +15,29 @@ typedef struct {
     unsigned int turn_x: 1;
     unsigned int turn_y: 1;
 
-    // Specify what tiles that x's stones occupy
-    // Name format is specified as tile_<tile_name>_<player_name>_<piece_name>
-    // The tile occupation fields are the cartesian product [tiles] x [players] x [pieces]
-    unsigned int tile_0_0_x_stone: 1; 
-    unsigned int tile_0_1_x_stone: 1; 
-    unsigned int tile_0_2_x_stone: 1; 
-    unsigned int tile_1_0_x_stone: 1; 
-    unsigned int tile_1_1_x_stone: 1; 
-    unsigned int tile_1_2_x_stone: 1; 
-    unsigned int tile_2_0_x_stone: 1; 
-    unsigned int tile_2_1_x_stone: 1; 
-    unsigned int tile_2_2_x_stone: 1; 
+    // Specify what nodes that x's stones occupy
+    // Name format is specified as node_<node_name>_<player_name>_<piece_name>
+    // The node occupation fields are the cartesian product [nodes] x [players] x [pieces]
+    unsigned int node_0_0_x_stone: 1; 
+    unsigned int node_0_1_x_stone: 1; 
+    unsigned int node_0_2_x_stone: 1; 
+    unsigned int node_1_0_x_stone: 1; 
+    unsigned int node_1_1_x_stone: 1; 
+    unsigned int node_1_2_x_stone: 1; 
+    unsigned int node_2_0_x_stone: 1; 
+    unsigned int node_2_1_x_stone: 1; 
+    unsigned int node_2_2_x_stone: 1; 
 
-    // Specify what tiles that y's stones occupy
-    unsigned int tile_0_0_y_stone: 1; 
-    unsigned int tile_0_1_y_stone: 1; 
-    unsigned int tile_0_2_y_stone: 1; 
-    unsigned int tile_1_0_y_stone: 1; 
-    unsigned int tile_1_1_y_stone: 1; 
-    unsigned int tile_1_2_y_stone: 1; 
-    unsigned int tile_2_0_y_stone: 1; 
-    unsigned int tile_2_1_y_stone: 1; 
-    unsigned int tile_2_2_y_stone: 1; 
+    // Specify what nodes that y's stones occupy
+    unsigned int node_0_0_y_stone: 1; 
+    unsigned int node_0_1_y_stone: 1; 
+    unsigned int node_0_2_y_stone: 1; 
+    unsigned int node_1_0_y_stone: 1; 
+    unsigned int node_1_1_y_stone: 1; 
+    unsigned int node_1_2_y_stone: 1; 
+    unsigned int node_2_0_y_stone: 1; 
+    unsigned int node_2_1_y_stone: 1; 
+    unsigned int node_2_2_y_stone: 1; 
 } Game;
 
 Game propnet;
