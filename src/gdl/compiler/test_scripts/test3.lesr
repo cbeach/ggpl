@@ -1,24 +1,11 @@
 (game tic_tack_toe 
     (players X O) 
-    (input 
-        (int x) 
-        (int y)
-    )
     (board 
         (tile_type square)
         (shape square)
         (size 3 3) 
     ) 
-    (end 
-        (last_player wins (n_in_a_row 3 i_nbors Stone)) 
-        (all draw 
-            (and 
-                (game.board.full) 
-                (not (n_in_a_row 3 i_nbors Stone))
-            )
-        )
-    ) 
-
+    (end (n_in_a_row 3 i_nbors Stone)) 
     (pieces 
         (piece Stone All
             (moves

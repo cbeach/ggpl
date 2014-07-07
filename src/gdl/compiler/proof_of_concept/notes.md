@@ -40,19 +40,41 @@ typedef struct {
     unsigned int node_2_2_y_stone: 1; 
 } Game;
 
+typedef struct {
+
+
+}
+
+typedef struct {
+    board_full: 1;
+} Meta;
+
 Game propnet;
+Meta meta;
 
-// Move legality
-legal = 
+// input_function arguments specified by declared inputs in the rules file
+char* input_function(int x, int y) {
+    // Check move legality
+    legal = ~node_<node_name>_y_stone $ node_<node_name>_y_stone
 
-// End condition
-game.end_condition_x_wins = (0_0_x & 0_1_x & 0_2_x) | (1_0_x & 1_1_x & 1_2_x) | (2_0_x & 2_1_x & 2_2_x) | (0_0_x & 1_0_x & 2_0_x) | (0_1_x & 1_1_x & 2_1_x) |
-                            (0_2_x & 1_2_x & 2_2_x) | (0_0_x & 1_1_x & 2_2_x) | (2_0_x & 1_1_x & 0_2_x)
+    // Logic that applies the changes
 
-game.end_condition_y_wins = (0_0_y & 0_1_y & 0_2_y) | (1_0_y & 1_1_y & 1_2_y) | (2_0_y & 2_1_y & 2_2_y) | (0_0_y & 1_0_y & 2_0_y) | (0_1_y & 1_1_y & 2_1_y) |
-                            (0_2_y & 1_2_y & 2_2_y) | (0_0_y & 1_1_y & 2_2_y) | (2_0_y & 1_1_y & 0_2_y)
+    Stuff...
 
+    // Check end conditions
+    game.end_condition_x_wins = (0_0_x & 0_1_x & 0_2_x) | (1_0_x & 1_1_x & 1_2_x) | 
+                                (2_0_x & 2_1_x & 2_2_x) | (0_0_x & 1_0_x & 2_0_x) | 
+                                (0_1_x & 1_1_x & 2_1_x) | (0_2_x & 1_2_x & 2_2_x) | 
+                                (0_0_x & 1_1_x & 2_2_x) | (2_0_x & 1_1_x & 0_2_x);
 
+    game.end_condition_y_wins = (0_0_y & 0_1_y & 0_2_y) | (1_0_y & 1_1_y & 1_2_y) | 
+                                (2_0_y & 2_1_y & 2_2_y) | (0_0_y & 1_0_y & 2_0_y) | 
+                                (0_1_y & 1_1_y & 2_1_y) | (0_2_y & 1_2_y & 2_2_y) | 
+                                (0_0_y & 1_1_y & 2_2_y) | (2_0_y & 1_1_y & 0_2_y);
 
+    game.end_condition_draw = ~game.end_condition_y_wins & ~game.end_condition_x_wins & 
+                              meta.board_full
 
+    // Return results
+}
 ```
