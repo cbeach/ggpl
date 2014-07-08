@@ -20,7 +20,7 @@
     ) 
 
     (pieces 
-        (piece Stone All
+        (piece Stone all
             (moves
                 (move
                     (action push dest) 

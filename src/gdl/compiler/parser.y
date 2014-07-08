@@ -2,25 +2,26 @@
 #include <string.h>
 %}
 
-%token BOOL_TRUE BOOL_FALSE
-
-%token IMPORT
-%token GAME PLAYER PIECE MOVE INPUT START PLAY END 
+%token GAME 
+%token PLAYERS 
+%token INPUT 
+%token BOARD TILE_TYPE TRIANGLE SQUARE HEX OCT SHAPE SIZE
+%token END LAST_PLAYER WINS ALL DRAW 
+%token PIECES PIECE MOVES MOVE PRE ACTION I_NBORS NO_D_NBORS PUSH POP EMPTY 
+%token SOURCE DEST
 %token ID
-%token PASS
 
 %token CHAR_CONST
 %token FLOAT_CONST
 %token INT_CONST
 %token STRING_CONST
 
-%token BOOL_TYPE
-%token CHAR_TYPE
-%token FLOAT_TYPE
-%token INT_TYPE
-%token STRING_TYPE
-%token UINT_TYPE
+%token BOOL_TYPE CHAR_TYPE FLOAT_TYPE INT_TYPE STRING_TYPE UINT_TYPE
 
+%token BOOL_TRUE BOOL_FALSE
+%token AND OR NOT
+
+%start input
 %%
 game_rules_definition: 
       game
@@ -35,81 +36,104 @@ Operators:
     Arithmatic: + - * / %
     Assignment: = += -= *= /= %= &= |= ~=
     Bitwise: & | ~ ^ << >> 
-    Comparison: and or not == != > < >= <=
+    Boolean: and or not == != > < >= <=
 */
 
-expr:
-      NUM
-    | STRING
-    | expr
-    | expr '+' expr
-    | expr '-' expr
-    | expr '*' expr
-    | expr '/' expr
-    | expr '%' expr
+input:
+     input line
 
-    | expr '=' expr
-    | expr '+=' expr
-    | expr '-=' expr
-    | expr '*=' expr
-    | expr '/=' expr
-    | expr '%=' expr
-    | expr '&=' expr
-    | expr '|=' expr
-    | expr '~=' expr
+line:
+      '\n'
+    | sexp '\n'
 
-    | expr '&' expr
-    | expr '|' expr
-    | expr '~' expr
-    | expr '<<' expr
-    | expr '>>' expr
+sexp:
+      atom
+    | list
+    | BOOLEAN_EXPRESSION
+    | ARITHMETIC_EXPRESSION
+    | BITWISE_EXPRESSION
+    | ASSIGNMENT_EXPRESSION
+    | COMPARISON_EXPRESSION
 
-    | expr '!' expr
-    | expr '<' expr
-    | expr '>=' expr
-    | expr '<=' expr
+list:
+      '(' ')'
+    | '(' sexp ')'
+    | '(' sexp_list sexp ')'
 
-stmt:
-      stmt
-    | block
-    | stmt expr
+sexp_list:
+      sexp
+    | sexp_list sexp
 
-block: 
-      block_stmt ':' '\n' 
-          block_code
+atom:
+      NUMBER
+    | SYMBOL
+    | KEYWORD  
 
-block_stmt:
-      game_def
-    | player_def
-    | piece_def
-    | move_def
-    | input_def
-    | rule_def
+ARITHMETIC_EXPRESSION:
+      + sexp sexp
+    | - sexp sexp
+    | * sexp sexp
+    | / sexp sexp
+    | % sexp sexp
 
-block_code:
-      INDENT PASS
-    | INDENT stmt
-    | INDENT expr
+/* Assignment: = += -= *= /= %= &= |= ~= */
 
+ASSIGNMENT_EXPRESSION
+      =
+    | +=
+    | -=
+    | *=
+    | /=
+    | %=
+    | &=
+    | |=
+    | ~=
 
-game_def:
-      GAME ID
-
-player_def:
-      PLAYER
-    | PLAYER ID
-
-ID:
-  ID
-
-VAR:
-   type ID
-
-NUM:
-      FLOAT_CONST
+KEYWORDS:
+      GAME
+    | PLAYERS
+    | INPUT
+    | BOARD
+    | TILE_TYPE
+    | TRIANGLE
+    | SQUARE
+    | HEX
+    | OCT
+    | SHAPE
+    | SIZE
+    | END
+    | LAST_PLAYER
+    | WINS
+    | ALL
+    | DRAW
+    | PIECES
+    | PIECE
+    | MOVES
+    | MOVE
+    | PRE
+    | ACTION
+    | I_NBORS
+    | NO_D_NBORS
+    | PUSH
+    | POP
+    | EMPTY
+    | SOURCE
+    | DEST
+    | ID
+    | CHAR_CONST
+    | FLOAT_CONST
     | INT_CONST
+    | STRING_CONST
+    | BOOL_TYPE
+    | CHAR_TYPE
+    | FLOAT_TYPE
+    | INT_TYPE
+    | STRING_TYPE
+    | UINT_TYPE
+    | BOOL_TRUE
+    | BOOL_FALSE
+    | AND
+    | OR
+    | NOT
 
-STRING:
-    STRING_CONST
-    
 %%

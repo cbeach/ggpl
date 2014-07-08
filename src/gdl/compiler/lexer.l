@@ -1,4 +1,5 @@
 %top {
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -12,263 +13,177 @@ void str_toupper(char* str) {
 int line_number = 1;
 }
 
-%x string
-
 digit       [0-9]
 id          [a-zA-Z][a-zA-Z0-9_]*
 space       [ ]
 tab         [\t]
 
 %%
+\( {
+    printf("Symbol: (\n");
+}
+
+\) {
+    printf("Symbol: )\n");
+}
+
 game  { 
-    printf("GAME\n"); 
+    printf("Symbol: game\n"); 
+}
+
+players { 
+    printf("Symbol: players\n"); 
 }
 
 input {
-    printf("INPUT\n"); 
-}
-
-piece { 
-    printf("PIECE\n"); 
-}
-
-player { 
-    printf("PLAYER\n"); 
-}
-
-start { 
-    printf("START\n"); 
-}
-
-end { 
-    printf("END\n"); 
-}
-
-play { 
-    printf("PLAY\n"); 
-}
-
-move { 
-    printf("MOVE\n"); 
-}
-
-dirn { 
-    printf("DIRN\n"); 
-}
-
-label { 
-    printf("LABEL\n"); 
-}
-
-mandatory { 
-    printf("MANDATORY\n"); 
-}
-
-owner { 
-    printf("OWNER\n"); 
-}
-
-post { 
-    printf("POST\n"); 
-}
-
-pre { 
-    printf("PRE\n"); 
-}
-
-priority { 
-    printf("PRIORITY\n"); 
-}
-
-action { 
-    printf("ACTION\n"); 
-}
-
-play_area { 
-    printf("PLAY_AREA\n"); 
-}
-
-number_set { 
-    printf("NUMBER_SET\n"); 
-}
-
-integers { 
-    printf("INTEGERS\n"); 
-}
-
-real { 
-    printf("REAL\n"); 
-}
-
-coordinates { 
-    printf("COORDINATES\n"); 
-}
-
-coordinate_system { 
-    printf("COORDINATE_SYSTEM\n"); 
-}
-
-cartesian { 
-    printf("Cartesian\n"); 
-}
-
-polar { 
-    printf("POLAR\n"); 
-}
-
-cylindrical { 
-    printf("CYLINDRICAL\n"); 
-}
-
-spherical { 
-    printf("SPHERICAL\n"); 
-}
-
-axes { 
-    printf("AXES\n"); 
-}
-
-[xyz]_axis { 
-    str_toupper(yytext);
-    printf("%s\n", yytext); 
-}
-
-type { 
-    printf("TYPE\n"); 
-}
-
-discrete { 
-    printf("DISCRETE\n"); 
-}
-
-continuous { 
-    printf("CONTINUOUS\n"); 
-}
-
-range { 
-    printf("RANGE\n"); 
-}
-
-max { 
-    printf("MAX\n"); 
-}
-
-min { 
-    printf("MIN\n"); 
-}
-
-area_structure { 
-    printf("AREA_STRUCTURE\n"); 
-}
-
-graph { 
-    printf("GRAPH\n"); 
-}
-
-plane { 
-    printf("PLANE\n"); 
-}
-
-volume { 
-    printf("VOLUME\n"); 
+    printf("Symbol: input\n"); 
 }
 
 board { 
-    printf("BOARD\n"); 
+    printf("Symbol: board\n"); 
 }
 
-tiling { 
-    printf("TILING\n"); 
+tile_type { 
+    printf("Symbol: tiling\n"); 
 }
 
 triangle { 
-    printf("TRIANGLE\n"); 
+    printf("Symbol: triangle\n"); 
 }
 
 square { 
-    printf("SQUARE\n"); 
+    printf("Symbol: square\n"); 
 }
 
 hex { 
-    printf("HEX\n"); 
+    printf("Symbol: hex\n"); 
 }
 
 truncated_square { 
-    printf("TRUNCATED_SQUARE\n"); 
-}
-
-i_nbors { 
-    printf("I_NBORS\n"); 
-}
-
-no_d_nbors { 
-    printf("NO_D_NBORS\n"); 
+    printf("Symbol: truncated_square\n"); 
 }
 
 shape { 
-    printf("SHAPE\n"); 
+    printf("Symbol: shape\n"); 
 }
 
 size { 
-    printf("SIZE\n"); 
+    printf("Symbol: size\n"); 
 }
 
-regions { 
-    printf("REGIONS\n"); 
+end { 
+    printf("Symbol: end\n"); 
 }
 
-: { 
-    printf("COLON\n"); 
+last_player { 
+    printf("Symbol: last_player\n"); 
+}
+
+wins { 
+    printf("Symbol: wins\n"); 
+}
+
+all { 
+    printf("Symbol: all\n"); 
+}
+
+draw { 
+    printf("Symbol: draw\n"); 
+}
+
+pieces { 
+    printf("Symbol: pieces\n"); 
+}
+
+piece { 
+    printf("Symbol: piece\n"); 
+}
+
+moves { 
+    printf("Symbol: moves\n"); 
+}
+
+move { 
+    printf("Symbol: move\n"); 
+}
+
+pre { 
+    printf("Symbol: pre\n"); 
+}
+
+action { 
+    printf("Symbol: action\n"); 
+}
+
+i_nbors { 
+    printf("Symbol: i_nbors\n"); 
+}
+
+no_d_nbors { 
+    printf("Symbol: no_d_nbors\n"); 
+}
+
+push {
+    printf("Symbol: push\n");
+}
+
+pop {
+    printf("Symbol: pop\n");
+}
+
+empty {
+    printf("Symbol: empty\n");
+}
+
+source {
+    printf("Symbol: source\n");
+}
+
+dest {
+    printf("Symbol: dest\n");
 }
 
 int|float|uint|char|string {
-
     str_toupper(yytext);
-    printf("%s\n", yytext); 
+    printf("Symbol: %s\n", yytext); 
 }
 
 True {
-    return BOOL_TRUE;
+    printf("Symbol: True\n"); 
 }
 
 False {
-    return BOOL_FALSE;
-
+    printf("Symbol: False\n"); 
 }
 
-^{space}+ { /* Use a start condition to get the beginning indent. */
-    printf("INDENT\n"); 
+and {
+    printf("Symbol: and\n"); 
+}
+
+or {
+    printf("Symbol: or\n"); 
+}
+
+not {
+    printf("Symbol: not\n"); 
 }
 
 {digit}+ { 
-    printf("INTEGER_CONSTANT: %s\n", yytext);
+    printf("Symbol: INTEGER_CONSTANT: %s\n", yytext);
 }
 
 {id} { 
-    printf("ID: %s\n", yytext); 
+    printf("Symbol: ID: %s\n", yytext); 
 }
 
-"\n" {
-    printf("NEW_LINE\n"); 
-    line_number++;
-}
-{space} ;
+[ ] ;
 
+[ \t\n] ;
 %%
 
 int main(int argc, char** argv) {
-    // \"                  { BEGIN string; ClearBuffer(strbuf); }
-    // <string>[^\\"\n]*   { AppendBufferString(strbuf, yytext); }
-    // <string>\\n         { AppendBufferChar(strbuf, '\n'); }
-    // <string>\\t         { AppendBufferChar(strbuf, '\t'); }
-    // <string>\\[0-7]*    { AppendBufferChar(strbuf, strtol(yytext+1, 0, 8)); }
-    // <string>\\[\\"]     { AppendBufferChar(strbuf, yytext[1]); }
-    // <string>\"          { yylval.str = strdup(BufferData(strbuf)); BEGIN 0; return STRING; }
-    // <string>\\.         { error("bogus escape '%s' in string\n", yytext); }
-    // <string>\n          { error("newline in string\n"); }
-    // lex through the input:
     if(argc < 2) {
-        printf("Leisurely: No input files present.  Please provide the path for an input file.\n");
+        printf("Symbol: Leisurely: No input files present.  Please provide the path for an input file.\n");
         return 1;
     }
 
