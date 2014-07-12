@@ -1,19 +1,35 @@
 %{
+#define YYDEBUG 1
+#include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <iostream>
+#include <alloca.h>
+
+using namespace std;
+
+extern "C" int yylex();
+extern "C" int yyparse();
+extern "C" FILE *yyin;
+ 
+void yyerror(const char *s);
+void str_toupper(char* str);
+
+
 %}
 
 %token GAME 
 %token PLAYERS 
 %token INPUT 
 %token BOARD TILE_TYPE TRIANGLE SQUARE HEX OCT SHAPE SIZE
-%token END LAST_PLAYER WINS ALL DRAW 
-%token PIECES PIECE MOVES MOVE PRE ACTION I_NBORS NO_D_NBORS PUSH POP EMPTY 
+%token END LAST_PLAYER ALL WINS LOSES DRAW 
+%token PIECES PIECE MOVES MOVE PRE ACTION I_NBORS NO_D_NBORS PUSH POP
 %token SOURCE DEST
 %token ID
 
 %token CHAR_CONST
 %token FLOAT_CONST
-%token INT_CONST
+%token INT_CONST 
 %token STRING_CONST
 
 %token BOOL_TYPE CHAR_TYPE FLOAT_TYPE INT_TYPE STRING_TYPE UINT_TYPE
@@ -21,143 +37,148 @@
 %token BOOL_TRUE BOOL_FALSE
 %token AND OR NOT
 
-%start input
+%token N_IN_A_ROW NBORS IS_BOARD_FULL NODE_EMPTY
+
+%start game_object
+
 %%
-input:
-     input line {}
+game_object:
+      '(' GAME game_definition_list ')' {}
+    | '(' GAME ID game_definition_list ')' {}
 
-line:
-      '\n' {}
-    | GAME_OBJECT '\n' {}
+game_definition_list:
+      '(' game_definition_term ')'
+    | game_definition_list '(' game_definition_term ')'
 
-GAME_OBJECT:
-      '(' game GAME_DEFINITION ')' {}
-    | '(' game ID GAME_DEFINITION ')' {}
+game_definition_term:
+      players_object 
+    | input_object 
+    | board_object 
+    | end_object 
+    | pieces_object
 
-GAME_DEFINITION:
-      PLAYERS_OBJECT INPUT_OBJECT BOARD_OBJECT END_OBJECT PIECES_OBJECT {}
+players_object:
+    PLAYERS id_list { printf("Parser: players_object -> '(' PLAYERS id_list ')'\n");}
 
-PLAYERS_OBJECT:
-    '(' players ID_LIST ')' {}
+id_list:
+      ID {printf("Parser: id_list -> ID");}
+    | id_list ID {}
 
-ID_LIST:
-      ID {}
-    | ID_LIST ID {}
+input_object:
+    INPUT variable_list {}
 
-INPUT_OBJECT:
-    '(' input VARIABLE_LIST ')' {}
+variable_list:
+      variable {}
+    | variable_list variable {}
 
-VARIABLE_LIST:
-      VARIABLE {}
-    | VARIABLE_LIST VARIABLE {}
+variable:
+    '(' type ID ')' {}
 
-VARIABLE:
-    '(' TYPE ID ')' {}
+type:
+      BOOL_TYPE
+    | CHAR_TYPE
+    | FLOAT_TYPE
+    | INT_TYPE
+    | STRING_TYPE
+    | UINT_TYPE
 
-BOARD_OBJECT:
-    '(' board BOARD_DEFINITION ')' {}
+board_object:
+    BOARD board_definition_list {}
 
-BOARD_DEFINITION:
-      TILE_TYPE {}
-    | BOARD_SHAPE {}
-    | BOARD_SIZE {}
+board_definition_list:
+      board_definition {}
+    | board_definition_list board_definition {}
 
-TILE_TYPE:
-      '(' tile_type TILE_SHAPE ')' {}
+board_definition:
+      tile_type_definition {}
+    | board_shape {}
+    | board_size {}
+
+tile_type_definition:
+      '(' TILE_TYPE shape_definition ')' {}
    
-SHAPE:
-      triangle {}
-    | square {}
+shape_definition:
+      TRIANGLE {}
+    | SQUARE {}
+    | HEX {}
+    | OCT {}
 
-BOARD_SHAPE:
-    '(' shape SHAPE ')' {}
+board_shape:
+    '(' SHAPE shape_definition ')' {}
 
-BOARD_SIZE:
-      '(' size INT ')' {}
-    | '(' size INT INT ')' {}
-    | '(' size INT INT INT ')' {}
+board_size:
+      '(' SIZE INT_CONST ')' {}
+    | '(' SIZE INT_CONST INT_CONST ')' {}
+    | '(' SIZE INT_CONST INT_CONST INT_CONST ')' {}
 
-END_OBJECT:
-    '(' end END_DEFINITION ')' {}
+end_object:
+    END end_definition_list {printf("Parser: end_object");}
 
-END_DEFINITION:
-      '(' PLAYER_RECORDS END_RESULT END_CONDITION ')' {}
+end_definition_list:
+      '(' end_definition ')' {printf("Parser: '(' end_definition ')'");}
+    | end_definition_list '(' end_definition ')' {printf("Parser: end_definition_list end_definition");}
 
-PLAYER_RECORD:
-      all  {}
-    | last_player {}
+end_definition:
+      player_record end_result '(' boolean_expression ')' {printf("Parser: player_record end_result '(' boolean_expression ')'");}
+
+player_record:
+      ALL  {printf("Parser: ALL");}
+    | LAST_PLAYER {}
      
-END_RESULT:
-      win {}
-    | lose {}
-    | draw {}
+end_result:
+      WINS {printf("Parser: WINS");}
+    | LOSES {printf("Parser: LOSES");}
+    | DRAW {printf("Parser: DRAW");}
 
-END_CONDITION:
-      BOOLEAN_EXPRESSION {}
+pieces_object:
+      PIECES piece_list {}
 
-PIECES_OBJECT:
-      '(' pieces PIECE_LIST')' {}
+piece_list:
+      '(' piece_definition ')' {}
+    | piece_list '(' piece_definition ')' {}
 
-PIECE_LIST:
-      PIECE {}
-    | PIECE_LIST PIECE {}
+piece_definition:
+      PIECE ID player_record moves_object {}
 
-PIECE:
-      piece ID PLAYER_RECORD MOVE_LIST {}
-    | '(' PIECE ')' {}
+moves_object:
+      '(' MOVES move_list ')'
 
-MOVES_OBJECT:
-      '(' moves MOVES_LIST')' {}
+move_list:
+      '(' move_definition ')' {}
+    | move_list '(' move_definition ')' {}
 
-MOVE_LIST:
-      MOVE {}
-    | MOVE_LIST MOVE {}
+move_definition:
+      MOVE move_property_list
 
-MOVE:
-      move ACTION PRE {}
+move_property_list:
+      move_property
+    | move_property_list move_property
+      
+move_property:
+      action_definition 
+    | pre_condition_definition {}
 
-ACTION:
-      action ACTION_DEF_LIST {}
+action_definition:
+      '(' ACTION action_def_list ')' {}
 
-ACTION_DEF_LIST:
-      ACTION_DEF {}
-    | ACTION_DEF_LIST ACTION_DEF {}
+action_def_list:
+      action_def {}
+    | action_def_list action_def {}
 
-ACTION_DEF:
-      '(' ACTION_DEF ')' {}
-    | push NODE_RECORD {}
+pre_condition_definition:
+    '(' PRE boolean_expression ')'
 
-NODE_RECORD:
-      source {}
-    | dest {}
+action_def:
+      '(' action_def ')' {}
+    | POP node_record {}
+    | PUSH node_record {}
 
-sexp:
-      atom {}
-    | list {}
-    | KEYWORD {}
-    | ASSIGNMENT_EXPRESSION {}
-    | ARITHMETIC_EXPRESSION {}
-    | BITWISE_EXPRESSION    {}
-    | BOOLEAN_EXPRESSION    {}
-    | COMPARISON_EXPRESSION {}
+node_record:
+      SOURCE {}
+    | DEST {}
 
-list:
-      '(' ')' {}
-    | '(' sexp ')' {}
-    | '(' sexp_list ')' {}
-
-sexp_list:
-      sexp {}
-    | sexp_list sexp {}
-
-atom:
-      NUMBER {}
-    | SYMBOL {}
-
-GAME_RULES_DEFINITION: 
-    game {}
-
-KEYWORDS:
+/*
+keyword:
       GAME {}
     | PLAYERS {}
     | INPUT {}
@@ -171,7 +192,7 @@ KEYWORDS:
     | SIZE {}
     | END {}
     | LAST_PLAYER {}
-    | WINS {}
+    | WIN {}
     | ALL {}
     | DRAW {}
     | PIECES {}
@@ -184,7 +205,6 @@ KEYWORDS:
     | NO_D_NBORS {}
     | PUSH {}
     | POP {}
-    | EMPTY {}
     | SOURCE {}
     | DEST {}
     | ID {}
@@ -204,57 +224,84 @@ KEYWORDS:
     | OR {}
     | NOT {}
 
-ASSIGNMENT_EXPRESSION
-      =  sexp sexp {}
-    | += sexp sexp {}
-    | -= sexp sexp {}
-    | *= sexp sexp {}
-    | /= sexp sexp {}
-    | %= sexp sexp {}
-    | &= sexp sexp {}
-    | |= sexp sexp {}
-    | ~= sexp sexp {}
+assignment_expression:
+      "="  ID expression {}
+    | "+=" ID expression {}
+    | "-=" ID expression {}
+    | "*=" ID expression {}
+    | "/=" ID expression {}
+    | "%=" ID expression {}
+    | "&=" ID expression {}
+    | "|=" ID expression {}
+    | "~=" ID expression {}
 
-ARITHMETIC_EXPRESSION:
-      + sexp sexp {} 
-    | - sexp sexp {}
-    | * sexp sexp {}
-    | / sexp sexp {}
-    | % sexp sexp {}
+expression:
+      arithmetic_expression
+    | bitwise_expression
+    | boolean_expression
 
-BITWISE_EXPRESSION:
-      '&' sexp sexp {} 
-    | '|' sexp sexp {}
-    | '~' sexp sexp {}
-    | >>  sexp sexp {}
-    | <<  sexp sexp {}
-    | ^   sexp sexp {}
+arithmetic_expression:
+      "+" arithmetic_expression arithmetic_expression {} 
+    | "-" arithmetic_expression arithmetic_expression {}
+    | "*" arithmetic_expression arithmetic_expression {}
+    | "/" arithmetic_expression arithmetic_expression {}
+    | "%" arithmetic_expression arithmetic_expression {}
 
-BOOLEAN_EXPRESSION:
-      BOOL_TRUE {}
-    | BOOL_FALSE {}
-    | '('  BOOLEAN_EXPRESSION ')' {}
-    | and  BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | or   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | not  BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | &&   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | '||' BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | !    BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | ==   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | !=   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | >    BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | <    BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | >=   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | <=   BOOLEAN_EXPRESSION BOOLEAN_EXPRESSION {}
-    | N_IN_A_ROW INTEGER NBORS PIECE {}
-    | IS_BOARD_FULL {}
-    | NODE_EMPTY NODE_RECORD {}
-%%
-/* 
-Operators:
-    Arithmatic: + - * / %
-    Assignment: = += -= *= /= %= &= |= ~=
-    Bitwise: & | ~ ^ << >> 
-    Boolean: and or not 
-    Comparison: == != > < >= <=
+bitwise_expression:
+      "&" bitwise_expression bitwise_expression {} 
+    | "|" bitwise_expression bitwise_expression {}
+    | "~" bitwise_expression bitwise_expression {}
+    | ">>"  bitwise_expression bitwise_expression {}
+    | "<<"  bitwise_expression bitwise_expression {}
+    | "^"   bitwise_expression bitwise_expression {}
 */
+
+boolean_expression:
+      '('  boolean_expression ')' {}
+    | BOOL_TRUE {}
+    | BOOL_FALSE {}
+    | AND  boolean_expression boolean_expression {}
+    | OR   boolean_expression boolean_expression {}
+    | NOT  boolean_expression {}
+    | "&&"   boolean_expression boolean_expression {}
+    | "||" boolean_expression boolean_expression {}
+    | "!"    boolean_expression boolean_expression {}
+    | "=="   boolean_expression boolean_expression {}
+    | "!="   boolean_expression boolean_expression {}
+    | ">"    boolean_expression boolean_expression {}
+    | "<"    boolean_expression boolean_expression {}
+    | ">="   boolean_expression boolean_expression {}
+    | "<="   boolean_expression boolean_expression {}
+    | N_IN_A_ROW INT_CONST nbors_definition ID {}
+    | IS_BOARD_FULL {}
+    | NODE_EMPTY node_record {}
+
+nbors_definition:
+      NBORS
+    | I_NBORS
+
+%%
+int main(int argc, char** argv) {
+    yydebug = 1;
+    if(argc < 2) {
+        printf("Symbol: Leisurely: No input files present.  Please provide the path for an input file.\n");
+        return 1;
+    }
+
+    FILE* leisurely_script = fopen(argv[1], "r"); 
+    if(!leisurely_script) {
+        printf("The input path was not a valid file.\n");
+    }
+    yyin = leisurely_script; 
+
+    // parse through the input until there is no more:
+	do {
+		yyparse();
+	} while (!feof(yyin));
+}
+
+void yyerror(const char *s) {
+    cout << "EEK, parse error!  Message: " << s << endl;
+    // might as well halt now:
+    exit(-1);
+}

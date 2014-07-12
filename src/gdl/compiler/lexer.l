@@ -2,7 +2,16 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <cstring>
+#include <ctype.h>
+#include <iostream>
+#include "parser.tab.h"
+
+#define YY_DECL extern "C" int yylex()
+
+
+using namespace std;
+
 void str_toupper(char* str) {
     int i = 0;
     int len = strlen(str);
@@ -20,160 +29,238 @@ tab         [\t]
 
 %%
 \( {
-    printf("Symbol: (\n");
+    printf("\nLexer: (\n");
+    return yytext[0];
 }
 
 \) {
-    printf("Symbol: )\n");
+    printf("\nLexer: )\n");
+    return yytext[0];
 }
 
 game  { 
-    printf("Symbol: game\n"); 
+    printf("\nLexer: game\n"); 
+    return GAME;
 }
 
 players { 
-    printf("Symbol: players\n"); 
+    printf("\nLexer: players\n"); 
+    return PLAYERS;
 }
 
 input {
-    printf("Symbol: input\n"); 
+    printf("\nLexer: input\n"); 
+    return INPUT;
 }
 
 board { 
-    printf("Symbol: board\n"); 
+    printf("\nLexer: board\n"); 
+    return BOARD;
 }
 
 tile_type { 
-    printf("Symbol: tiling\n"); 
+    printf("\nLexer: tiling\n"); 
+    return TILE_TYPE;
 }
 
 triangle { 
-    printf("Symbol: triangle\n"); 
+    printf("\nLexer: triangle\n"); 
+    return TRIANGLE;
 }
 
 square { 
-    printf("Symbol: square\n"); 
+    printf("\nLexer: square\n"); 
+    return SQUARE;
 }
 
 hex { 
-    printf("Symbol: hex\n"); 
+    printf("\nLexer: hex\n"); 
+    return HEX;
 }
 
-truncated_square { 
-    printf("Symbol: truncated_square\n"); 
+oct { 
+    printf("\nLexer: truncated_square\n"); 
+    return OCT;
 }
 
 shape { 
-    printf("Symbol: shape\n"); 
+    printf("\nLexer: shape\n"); 
+    return SHAPE;
 }
 
 size { 
-    printf("Symbol: size\n"); 
+    printf("\nLexer: size\n"); 
+    return SIZE;
 }
 
 end { 
-    printf("Symbol: end\n"); 
+    printf("\nLexer: end\n"); 
+    return END;
 }
 
 last_player { 
-    printf("Symbol: last_player\n"); 
+    printf("\nLexer: last_player\n"); 
+    return LAST_PLAYER;
 }
 
 wins { 
-    printf("Symbol: wins\n"); 
+    printf("\nLexer: wins\n"); 
+    return WINS;
+}
+
+loses {
+    printf("\nLexer: loses\n"); 
+    return LOSES;
 }
 
 all { 
-    printf("Symbol: all\n"); 
+    printf("\nLexer: all\n"); 
+    return ALL;
 }
 
 draw { 
-    printf("Symbol: draw\n"); 
+    printf("\nLexer: draw\n"); 
+    return DRAW;
 }
 
 pieces { 
-    printf("Symbol: pieces\n"); 
+    printf("\nLexer: pieces\n"); 
+    return PIECES;
 }
 
 piece { 
-    printf("Symbol: piece\n"); 
+    printf("\nLexer: piece\n"); 
+    return PIECE;
 }
 
 moves { 
-    printf("Symbol: moves\n"); 
+    printf("\nLexer: moves\n"); 
+    return MOVES;
 }
 
 move { 
-    printf("Symbol: move\n"); 
+    printf("\nLexer: move\n"); 
+    return MOVE;
 }
 
 pre { 
-    printf("Symbol: pre\n"); 
+    printf("\nLexer: pre\n"); 
+    return PRE;
 }
 
 action { 
-    printf("Symbol: action\n"); 
+    printf("\nLexer: action\n"); 
+    return ACTION;
 }
 
 i_nbors { 
-    printf("Symbol: i_nbors\n"); 
+    printf("\nLexer: i_nbors\n"); 
+    return I_NBORS;
 }
 
 no_d_nbors { 
-    printf("Symbol: no_d_nbors\n"); 
+    printf("\nLexer: no_d_nbors\n"); 
+    return NO_D_NBORS;
 }
 
 push {
-    printf("Symbol: push\n");
+    printf("\nLexer: push\n");
+    return PUSH;
 }
 
 pop {
-    printf("Symbol: pop\n");
+    printf("\nLexer: pop\n");
+    return POP;
 }
 
 empty {
-    printf("Symbol: empty\n");
+    printf("\nLexer: empty\n");
+    return NODE_EMPTY;
 }
 
 source {
-    printf("Symbol: source\n");
+    printf("\nLexer: source\n");
+    return SOURCE;
 }
 
 dest {
-    printf("Symbol: dest\n");
+    printf("\nLexer: dest\n");
+    return DEST;
 }
 
-int|float|uint|char|string {
+int {
     str_toupper(yytext);
-    printf("Symbol: %s\n", yytext); 
+    printf("\nLexer: %s\n", yytext); 
+    return INT_TYPE;
 }
+
+float {
+    str_toupper(yytext);
+    printf("\nLexer: %s\n", yytext); 
+    return FLOAT_TYPE;
+}
+
+uint {
+    str_toupper(yytext);
+    printf("\nLexer: %s\n", yytext); 
+    return UINT_TYPE;
+}
+char {
+    str_toupper(yytext);
+    printf("\nLexer: %s\n", yytext); 
+    return CHAR_TYPE;
+}
+
+
 
 True {
-    printf("Symbol: True\n"); 
+    printf("\nLexer: True\n"); 
+    return BOOL_TRUE;
 }
 
 False {
-    printf("Symbol: False\n"); 
+    printf("\nLexer: False\n"); 
+    return BOOL_FALSE;
 }
 
 and {
-    printf("Symbol: and\n"); 
+    printf("\nLexer: and\n"); 
+    return AND;
 }
 
 or {
-    printf("Symbol: or\n"); 
+    printf("\nLexer: or\n"); 
+    return OR;
 }
 
 not {
-    printf("Symbol: not\n"); 
+    printf("\nLexer: not\n"); 
+    return NOT;
+}
+
+n_in_a_row {
+    printf("\nLexer: n_in_a_row\n"); 
+    return N_IN_A_ROW;
+}
+
+i_nbors {
+    printf("\nLexer: i_nbors\n"); 
+    return I_NBORS;
+}
+
+is_board_full {
+    printf("\nLexer: is_board_full\n"); 
+    return IS_BOARD_FULL;
 }
 
 {digit}+ { 
-    printf("Symbol: INTEGER_CONSTANT: %s\n", yytext);
+    printf("\nLexer: INTEGER_CONSTANT: %s\n", yytext);
+    return INT_CONST;
 }
 
 {id} { 
-    printf("Symbol: ID: %s\n", yytext); 
+    printf("\nLexer: ID: %s\n", yytext); 
+    return ID;
 }
 
 [ ] ;
@@ -181,9 +268,10 @@ not {
 [ \t\n] ;
 %%
 
+/*
 int main(int argc, char** argv) {
     if(argc < 2) {
-        printf("Symbol: Leisurely: No input files present.  Please provide the path for an input file.\n");
+        printf("\nLexer: Leisurely: No input files present.  Please provide the path for an input file.\n");
         return 1;
     }
 
@@ -192,5 +280,10 @@ int main(int argc, char** argv) {
         printf("The input path was not a valid file.\n");
     }
     yyin = leisurely_script; 
-    yylex();
+    for(int i = 0; i < 1000; i++) {
+        yylex();
+	}
 }
+*/
+
+

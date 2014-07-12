@@ -1,8 +1,0 @@
-(game tic_tack_toe 
-    (players X O) 
-    (board 
-        (tile_type square)
-        (shape square)
-        (board_size 3 3) 
-    ) 
-)

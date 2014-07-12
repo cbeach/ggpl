@@ -1,4 +1,0 @@
-
-
-class ParserError(Exception):
-    pass
