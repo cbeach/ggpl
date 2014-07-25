@@ -1,9 +1,13 @@
 CC=g++
 CFLAGS=-lfl -Wno-write-strings -g -o
+FILES=lex.yy.c parser.tab.c game.cpp input_list.cpp end.cpp board.cpp \
+	  piece_list.cpp player_list.cpp piece.cpp base_node.cpp move_list.cpp \
+	  player.cpp move.cpp precondition.cpp action.cpp action_list.cpp \
+	  move_property.cpp move_property_list.cpp
 
 
-lexer: lex.yy.cc
-	${CC} lex.yy.c parser.tab.c ${CFLAGS} lexer
+lexer: lex.yy.cc parser.tab.c
+	${CC} ${FILES} ${CFLAGS} lexer
 
 lex.yy.cc: clean parser.tab.h lexer.l
 	flex lexer.l

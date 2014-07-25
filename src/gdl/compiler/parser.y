@@ -1,3 +1,15 @@
+%code requires {
+    #include "piece_list.hpp"
+    #include "player.hpp"
+    #include "piece.hpp"
+    #include "move_list.hpp"
+    #include "player.hpp"
+    #include "move.hpp"
+    #include "action_list.hpp"
+    #include "action.hpp"
+    #include "move_property_list.hpp"
+}
+
 %{
 #define YYDEBUG 1
 #include <stdlib.h>
@@ -5,6 +17,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <alloca.h>
+#include "game.hpp"
 
 using namespace std;
 
@@ -15,54 +28,89 @@ extern "C" FILE *yyin;
 void yyerror(const char *s);
 void str_toupper(char* str);
 
-
+Game game_object;
+//SymbolTable symbols;
 %}
+
+%union {
+    int int_type;
+    float float_time;
+    char* c_string; 
+    Piece* cpp_piece;
+    PieceList* cpp_piece_list;
+    Player* cpp_player;
+    MoveList* cpp_move_list;
+    Move* cpp_move;
+    ActionList* cpp_action_list;
+    Action* cpp_action;
+    MovePropertyList* cpp_move_property_list;
+    MoveProperty* cpp_move_property;
+    MovePrecondition* cpp_precondition;
+}
 
 %token GAME 
 %token PLAYERS 
 %token INPUT 
 %token BOARD TILE_TYPE TRIANGLE SQUARE HEX OCT SHAPE SIZE
-%token END LAST_PLAYER ALL WINS LOSES DRAW 
-%token PIECES PIECE MOVES MOVE PRE ACTION I_NBORS NO_D_NBORS PUSH POP
+%token END  
+%token WINS LOSES DRAW 
+%token PIECES 
+%token PIECE 
+%token MOVES MOVE PRE ACTION I_NBORS NO_D_NBORS PUSH POP
 %token SOURCE DEST
-%token ID
-
 %token CHAR_CONST
 %token FLOAT_CONST
 %token INT_CONST 
 %token STRING_CONST
-
 %token BOOL_TYPE CHAR_TYPE FLOAT_TYPE INT_TYPE STRING_TYPE UINT_TYPE
-
 %token BOOL_TRUE BOOL_FALSE
 %token AND OR NOT
-
 %token N_IN_A_ROW NBORS IS_BOARD_FULL NODE_EMPTY
 
-%start game_object
+%token<c_string> ALL LAST_PLAYER
+%token<c_string> ID
 
+%type<cpp_piece> piece_definition
+%type<cpp_piece_list> piece_list
+%type<cpp_player> player_record
+%type<cpp_move_list> moves_object
+%type<cpp_move_list> move_list
+%type<cpp_move> move_definition
+%type<cpp_action_list> action_def_list
+%type<cpp_action> action_definition
+%type<cpp_move_property_list> move_property_list
+%type<cpp_move_property> move_property
+%type<cpp_precondition> precondition_definition
+
+%start game_object
 %%
 game_object:
-      '(' GAME game_definition_list ')' {}
-    | '(' GAME ID game_definition_list ')' {}
+      '(' GAME game_definition_term_list ')' { 
+        Game(game_definition_term_list);
+        //symbols.add_symbol("game", "", "");
+    }
+    | '(' GAME ID game_definition_term_list ')' { 
+        //symbols.add_symbol("game", "", "");
+    }
 
-game_definition_list:
-      '(' game_definition_term ')'
-    | game_definition_list '(' game_definition_term ')'
+game_definition_term_list:
+      game_definition_term
+    | game_definition_term_list game_definition_term {}
 
 game_definition_term:
-      players_object 
-    | input_object 
-    | board_object 
-    | end_object 
-    | pieces_object
+      '(' game_definition_term ')'
+    | players_object {}
+    | input_object {} 
+    | board_object {}
+    | end_object {}
+    | pieces_object {}
 
 players_object:
-    PLAYERS id_list { printf("Parser: players_object -> '(' PLAYERS id_list ')'\n");}
+    PLAYERS player_id_list { printf("Parser: players_object -> '(' PLAYERS id_list ')'\n");}
 
-id_list:
+player_id_list:
       ID {printf("Parser: id_list -> ID");}
-    | id_list ID {}
+    | player_id_list ID {}
 
 input_object:
     INPUT variable_list {}
@@ -107,23 +155,27 @@ board_shape:
     '(' SHAPE shape_definition ')' {}
 
 board_size:
-      '(' SIZE INT_CONST ')' {}
-    | '(' SIZE INT_CONST INT_CONST ')' {}
-    | '(' SIZE INT_CONST INT_CONST INT_CONST ')' {}
+      '(' board_size ')' 
+    | SIZE INT_CONST  {}
+    | SIZE INT_CONST INT_CONST  {}
+    | SIZE INT_CONST INT_CONST INT_CONST  {}
 
 end_object:
     END end_definition_list {printf("Parser: end_object");}
 
 end_definition_list:
-      '(' end_definition ')' {printf("Parser: '(' end_definition ')'");}
-    | end_definition_list '(' end_definition ')' {printf("Parser: end_definition_list end_definition");}
+      end_definition  {printf("Parser: '(' end_definition ')'");}
+    | end_definition_list end_definition  {printf("Parser: end_definition_list end_definition");}
 
 end_definition:
-      player_record end_result '(' boolean_expression ')' {printf("Parser: player_record end_result '(' boolean_expression ')'");}
+      '(' player_record end_result '(' boolean_expression ')' ')' {printf("Parser: player_record end_result '(' boolean_expression ')'");}
 
 player_record:
-      ALL  {printf("Parser: ALL");}
-    | LAST_PLAYER {}
+      ALL  {
+        $$ = new Player($1);
+    } | LAST_PLAYER {
+        $$ = new Player($1);
+    }
      
 end_result:
       WINS {printf("Parser: WINS");}
@@ -134,42 +186,62 @@ pieces_object:
       PIECES piece_list {}
 
 piece_list:
-      '(' piece_definition ')' {}
-    | piece_list '(' piece_definition ')' {}
+      piece_definition {}
+    | piece_list piece_definition  {}
 
 piece_definition:
-      PIECE ID player_record moves_object {}
+      '(' PIECE ID player_record moves_object ')' {
+        $$->add_name($3);
+        $$->set_player($4);
+        $$->set_move_list($5);
+    }
 
 moves_object:
-      '(' MOVES move_list ')'
+      '(' MOVES move_list ')' {
+        $$ = $3 
+    }
 
 move_list:
-      '(' move_definition ')' {}
-    | move_list '(' move_definition ')' {}
+      move_definition {
+        $$->add_move($1); 
+    } | move_list move_definition { 
+        $1->add_move($2); 
+    }
 
 move_definition:
-      MOVE move_property_list
+      '(' MOVE move_property_list ')' {
+        $$ = new Move();
+        $$->add_property_list($3);
+    }
 
 move_property_list:
-      move_property
-    | move_property_list move_property
+      move_property {
+        $$->add_property($1);   
+    } | move_property_list move_property {
+        $$->add_property($2);   
+    }
       
 move_property:
-      action_definition 
-    | pre_condition_definition {}
+      action_definition {
+        $$ = $1;
+    } | precondition_definition {
+        $$ = $1;
+    }
 
 action_definition:
       '(' ACTION action_def_list ')' {}
 
 action_def_list:
-      action_def {}
-    | action_def_list action_def {}
+      action_definition {}
+    | action_def_list action_definition {}
 
-pre_condition_definition:
-    '(' PRE boolean_expression ')'
+precondition_definition:
+      '(' PRE boolean_expression ')' {
+        $$ = new MovePrecondition();
+    }
 
-action_def:
-      '(' action_def ')' {}
+action_definition:
+      '(' action_definition ')' {}
     | POP node_record {}
     | PUSH node_record {}
 

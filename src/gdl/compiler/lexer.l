@@ -5,6 +5,8 @@
 #include <cstring>
 #include <ctype.h>
 #include <iostream>
+#include <string>
+#include <cstring>
 #include "parser.tab.h"
 
 #define YY_DECL extern "C" int yylex()
@@ -100,6 +102,7 @@ end {
 
 last_player { 
     printf("\nLexer: last_player\n"); 
+    yylval.c_string = strdup(yytext);
     return LAST_PLAYER;
 }
 
@@ -115,6 +118,7 @@ loses {
 
 all { 
     printf("\nLexer: all\n"); 
+    yylval.c_string = strdup(yytext);
     return ALL;
 }
 
@@ -260,6 +264,7 @@ is_board_full {
 
 {id} { 
     printf("\nLexer: ID: %s\n", yytext); 
+    yylval.c_string = strdup(yytext);
     return ID;
 }
 
